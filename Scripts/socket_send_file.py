@@ -8,9 +8,11 @@ s = socket.socket()
 s.connect((HOST, PORT))
 
 with open(FILE, "rb") as f:
-    buffer = f.read(4096)
-    while buffer:
-        s.sendall(buffer)
+    while True:
         buffer = f.read(4096)
+        if buffer:
+            s.sendall(buffer)
+        else:
+            break
 
 s.close()
