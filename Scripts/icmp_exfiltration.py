@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 # This is a server for files ICMP exfiltration
 # On victim machine you should type something like that:

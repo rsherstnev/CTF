@@ -4,7 +4,7 @@ HOST = '192.168.0.195'
 PORT = 6969
 FILE = 'hello.txt'
 
-s = socket.socket()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 with open(FILE, "rb") as f:
