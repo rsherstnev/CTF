@@ -35,6 +35,7 @@ try:
     scripts_absolute_path = subprocess.run(["locate", ".nse"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True).stdout.strip().split('\n')
     description_regex = re.compile(r'description = \[\[.*?\]\]', flags=re.DOTALL | re.IGNORECASE)
     categories_regex = re.compile(r'categories = \{.*?\}', flags=re.DOTALL | re.IGNORECASE)
+    index = 1
 
     for script_absolute_path in scripts_absolute_path:
 
@@ -68,9 +69,10 @@ try:
 
         if match == True:
             if args.absolute_path:
-                print(Style.BRIGHT + Fore.RED + script_absolute_path)
+                print(Style.RESET_ALL + '[' + str(index) + '] ' + Style.BRIGHT + Fore.RED + script_absolute_path)
             else:
-                print(Style.BRIGHT + Fore.RED + script_name)
+                print(Style.RESET_ALL + '[' + str(index) + '] ' + Style.BRIGHT + Fore.RED + script_name)
+            index = index + 1
             if args.verbose:
                 if script_categories:
                     print(Style.RESET_ALL + 'Categories: ' + Style.BRIGHT + Fore.BLUE + script_categories)
