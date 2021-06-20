@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Use sudo updatedb before searching for index all scripts in cache
 
 import argparse
 import re
@@ -13,9 +14,10 @@ parser.add_argument('-c', '--category', type=str)
 parser.add_argument('-d', '--description', type=str)
 parser.add_argument('-a', '--absolute-path', action='store_true')
 parser.add_argument('-v', '--verbose', action='store_true')
+parser.add_argument('-o', '--option', action='store_true')
 
 HELP = '''Usage: searchnmapscript.py [--help] [--name NAME] [--category CATEGORY]
-                           [--description DESCRIPTION] [--absolute-path] [--verbose]
+                           [--description DESCRIPTION] [--absolute-path] [--verbose | --option]
 
 Options:
 -h, --help                  Print this help summary page
@@ -23,19 +25,25 @@ Options:
 -c, --category              Script category for searching
 -d, --description           Script description for searching
 -a, --absolute-path         Print scripts absolute paths (default: only names)
--v, --verbose               Verbose output (name / path + categories + description; default: name / path)'''
+-v, --verbose               Verbose output (name / path + categories + description; default: name / path)
+-o, --option                Output in option format for using in nmap scan'''
 
 try:
     args = parser.parse_args()
 
     if args.help:
         print(HELP)
-        raise SystemExit
+        exit(1)
+    
+    if args.verbose and args.option:
+        print('Verbose option cannot be used with -o / --option option!')
+        exit(1)
 
     scripts_absolute_path = subprocess.run(["locate", ".nse"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True).stdout.strip().split('\n')
     description_regex = re.compile(r'description = \[\[.*?\]\]', flags=re.DOTALL | re.IGNORECASE)
     categories_regex = re.compile(r'categories = \{.*?\}', flags=re.DOTALL | re.IGNORECASE)
     index = 1
+    output = ''
 
     for script_absolute_path in scripts_absolute_path:
 
@@ -68,16 +76,21 @@ try:
                     match = True
 
         if match == True:
+            if not args.option:
+                output += Style.RESET_ALL + '[' + str(index) + '] '
+            endl = ', ' if args.option else '\n'
             if args.absolute_path:
-                print(Style.RESET_ALL + '[' + str(index) + '] ' + Style.BRIGHT + Fore.RED + script_absolute_path)
+                output += Style.BRIGHT + Fore.RED + script_absolute_path + endl
             else:
-                print(Style.RESET_ALL + '[' + str(index) + '] ' + Style.BRIGHT + Fore.RED + script_name)
-            index = index + 1
+                output += Style.BRIGHT + Fore.RED + script_name + endl
             if args.verbose:
                 if script_categories:
-                    print(Style.RESET_ALL + 'Categories: ' + Style.BRIGHT + Fore.BLUE + script_categories)
+                    output += (Style.RESET_ALL + 'Categories: ' + Style.BRIGHT + Fore.BLUE + script_categories).strip('\n') + '\n'
                 if script_description:
-                    print(Style.RESET_ALL + 'Description:\n' + Style.BRIGHT + Fore.BLUE + script_description)
+                    output += (Style.RESET_ALL + 'Description:\n' + Style.BRIGHT + Fore.BLUE + script_description).strip('\n') + '\n'
+            index = index + 1
+
+    print(output.strip(', ').strip('\n'))
 
 except KeyboardInterrupt:
     raise SystemExit
